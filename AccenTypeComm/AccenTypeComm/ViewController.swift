@@ -9,10 +9,27 @@
 import UIKit
 
 class ViewController: UIViewController {
-
+    var server: AccenTypeServer!;
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        
+        println("Markus")
+        
+        // Override point for customization after application launch.
+        self.server = AccenTypeServer()
+        
+        // thế là sao
+        // xin chao
+        self.server.getSuggestion("the la sao") {
+            (var suggestionsPerWord) in
+            
+            for suggestions in suggestionsPerWord {
+                println("answer: " + (",".join(suggestions)))
+            }
+        }
+        
     }
 
     override func didReceiveMemoryWarning() {

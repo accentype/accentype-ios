@@ -9,5 +9,6 @@
 #ifndef AccenTypeComm_Bridging_Header_h
 #define AccenTypeComm_Bridging_Header_h
 
+#import <CocoaAsyncSocket/GCDAsyncUdpSocket.h>
 
 #endif
