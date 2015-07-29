@@ -17,13 +17,15 @@ class SuggestionView: BannerViewCollectionView {
 
     // Constants
     let suggestionMargin = CGFloat(10)
-    let suggestions = ["hellö", "holafsdkfdk", "hillo", "halo", "hurry", "hurt", "hurtz", "hermit", "herky"]
+    var suggestions = [String]()
     
     // Variables
     var keyboardDelegate : SuggestionStringUpdateDelegate?
-    
+    var server = AccenTypeServer()
+
     required init(globalColors: GlobalColors.Type?, darkMode: Bool, solidColorMode: Bool) {
         super.init(globalColors: globalColors, darkMode: darkMode, solidColorMode: solidColorMode)
+        self.setObserversForNotifications()
     }
     
     required init(coder aDecoder: NSCoder) {
@@ -36,11 +38,25 @@ class SuggestionView: BannerViewCollectionView {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        self.setupSuggestions()
     }
 
-    func setupSuggestions()
+    func setObserversForNotifications() -> Void {
+        
+        NSNotificationCenter.defaultCenter().addObserver(
+            self,
+            selector: "inputUpdated:",
+            name: notification_inputChanged,
+            object: nil)
+        
+        
+    }
+    
+    func setupSuggestions(suggestions : [String])
     {
+        // Remove all subviews alls
+        self.subviews.map({ $0.removeFromSuperview() })
+        self.suggestions = suggestions
+        
         var currentXOrigin = CGFloat(0)
         
         for var index = 0; index < suggestions.count; index++
@@ -93,4 +109,22 @@ class SuggestionView: BannerViewCollectionView {
     {
         sender.backgroundColor = UIColor(red: CGFloat(235)/CGFloat(255), green: CGFloat(237)/CGFloat(255), blue: CGFloat(239)/CGFloat(255), alpha: 1.0)
     }
+    
+    // Called when the input is updatd, need to fetch new suggestions
+    func inputUpdated(notification : NSNotification)
+    {
+        let userInfo : Dictionary<String, String!> = notification.userInfo as! Dictionary<String, String!>
+        let string =  Utils.unaccentString(userInfo["text"]!)
+        self.server.getSuggestion(string!, completion: { (result) -> Void in
+            
+            var returnSuggestions = [String]()
+            for suggestion in result {
+                returnSuggestions.append(" ".join(suggestion))
+            }
+            self.setupSuggestions(returnSuggestions)
+        })
+    }
+    
+    
+
 }

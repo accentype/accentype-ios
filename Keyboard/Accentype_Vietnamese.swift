@@ -17,7 +17,11 @@ let kCatTypeEnabled = "kCatTypeEnabled"
 
 class Accentype_Vietnamese: KeyboardViewController, SuggestionStringUpdateDelegate {
     
+    // Constants
     let takeDebugScreenshot: Bool = false
+    
+    // Properties
+    var server = AccenTypeServer()
     
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?) {
         NSUserDefaults.standardUserDefaults().registerDefaults([kCatTypeEnabled: true])
@@ -46,7 +50,7 @@ class Accentype_Vietnamese: KeyboardViewController, SuggestionStringUpdateDelega
 //            }
             
             if !NSUserDefaults.standardUserDefaults().boolForKey(kCatTypeEnabled) {
-                textDocumentProxy.insertText(keyOutput)
+                self.insertText(keyOutput)
                 return
             }
             /////////
@@ -55,7 +59,7 @@ class Accentype_Vietnamese: KeyboardViewController, SuggestionStringUpdateDelega
                 let context = textDocumentProxy.documentContextBeforeInput
                 if context != nil {
                     if count(context) < 2 {
-                        textDocumentProxy.insertText(keyOutput)
+                        self.insertText(keyOutput)
                         return
                     }
                     
@@ -63,26 +67,26 @@ class Accentype_Vietnamese: KeyboardViewController, SuggestionStringUpdateDelega
                     
                     index = index.predecessor()
                     if context[index] != " " {
-                        textDocumentProxy.insertText(keyOutput)
+                        self.insertText(keyOutput)
                         return
                     }
                     
                     index = index.predecessor()
                     if context[index] == " " {
-                        textDocumentProxy.insertText(keyOutput)
+                        self.insertText(keyOutput)
                         return
                     }
 
-                    textDocumentProxy.insertText(keyOutput)
+                    self.insertText(keyOutput)
                     return
                 }
                 else {
-                    textDocumentProxy.insertText(keyOutput)
+                    self.insertText(keyOutput)
                     return
                 }
             }
             else {
-                textDocumentProxy.insertText(keyOutput)
+                self.insertText(keyOutput)
                 return
             }
         }
@@ -139,12 +143,6 @@ class Accentype_Vietnamese: KeyboardViewController, SuggestionStringUpdateDelega
         }
     }
     
-    func unaccentString(string : String) -> String?
-    {
-        var data = string.dataUsingEncoding(NSASCIIStringEncoding, allowLossyConversion: true)
-        return NSString(data: data!, encoding: NSASCIIStringEncoding) as String?
-    }
-    
     func deleteString(string: String, ignoreAccent : Bool) -> Void
     {
         let textDocumentProxy = self.textDocumentProxy as? UITextDocumentProxy
@@ -159,8 +157,8 @@ class Accentype_Vietnamese: KeyboardViewController, SuggestionStringUpdateDelega
         
         if (ignoreAccent)
         {
-            stringToDelete = self.unaccentString(string)
-            stringContext = self.unaccentString(stringContext!)
+            stringToDelete = Utils.unaccentString(string)
+            stringContext = Utils.unaccentString(stringContext!)
         }
         
         let range = stringContext!.rangeOfString(stringToDelete!)
@@ -183,13 +181,23 @@ class Accentype_Vietnamese: KeyboardViewController, SuggestionStringUpdateDelega
         }
     }
     
+    func insertText(newText : String) -> Void
+    {
+        if let textDocumentProxy = self.textDocumentProxy as? UITextDocumentProxy {
+            textDocumentProxy.insertText(newText)
+            NSNotificationCenter.defaultCenter().postNotificationName(
+                notification_inputChanged,
+                object: nil,
+                userInfo: ["text" : textDocumentProxy.documentContextBeforeInput])
+        }
+    }
     
-    // Suggestion view banner delegate
+    // Suggestion view banner delegate. Invoked when the user clicks on a suggestion
     func updateString(updateString: String)
     {
         if let textDocumentProxy = self.textDocumentProxy as? UITextDocumentProxy {
                 self.deleteString(updateString, ignoreAccent: true)
-                textDocumentProxy.insertText(updateString)
+                self.insertText(updateString)
         }
     }
 }
