@@ -35,6 +35,20 @@
                ReferencedContainer = "container:Accentype.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "NO"
+            buildForArchiving = "NO"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "AFC92B591B69320700BA50FF"
+               BuildableName = "Accentype Tests.xctest"
+               BlueprintName = "Accentype Tests"
+               ReferencedContainer = "container:Accentype.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
    <TestAction
@@ -43,13 +57,23 @@
       shouldUseLaunchSchemeArgsEnv = "YES"
       buildConfiguration = "Debug">
       <Testables>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "AFC92B591B69320700BA50FF"
+               BuildableName = "Accentype Tests.xctest"
+               BlueprintName = "Accentype Tests"
+               ReferencedContainer = "container:Accentype.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "4E807DB819461DC700D875D1"
-            BuildableName = "Keyboard.appex"
-            BlueprintName = "Keyboard"
+            BlueprintIdentifier = "4E807D9219461D9000D875D1"
+            BuildableName = "HostingApp.app"
+            BlueprintName = "HostingApp"
             ReferencedContainer = "container:Accentype.xcodeproj">
          </BuildableReference>
       </MacroExpansion>

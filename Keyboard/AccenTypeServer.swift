@@ -200,6 +200,7 @@ public class AccenTypeServer: GCDAsyncUdpSocketDelegate {
     static func expandSuggestions(suggestions:[[String]]) -> ExpandedSequence {
         return ExpandedSequence(suggestions)
     }
+    
 }
 
 struct ExpandedSequence : SequenceType {

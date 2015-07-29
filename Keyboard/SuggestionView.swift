@@ -17,6 +17,7 @@ class SuggestionView: BannerViewCollectionView {
 
     // Constants
     let suggestionMargin = CGFloat(10)
+    let maxSuggestionCount = 10
     var suggestions = [String]()
     
     // Variables
@@ -115,16 +116,29 @@ class SuggestionView: BannerViewCollectionView {
     {
         let userInfo : Dictionary<String, String!> = notification.userInfo as! Dictionary<String, String!>
         let string =  Utils.unaccentString(userInfo["text"]!)
+        
+        // If we have empty or whitespace strings, then don't bother sending to the server
+        if string!.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet()) == "" {
+            self.setupSuggestions([String]())
+            return
+        }
+        
         self.server.getSuggestion(string!, completion: { (result) -> Void in
             
-            var returnSuggestions = [String]()
-            for suggestion in result {
-                returnSuggestions.append(" ".join(suggestion))
+            // Get flatten suggestions
+            var flattenSuggestions : ExpandedSequence = AccenTypeServer.expandSuggestions(result)
+            var suggestions = [String]()
+            for w in flattenSuggestions
+            {
+                suggestions.append(w)
             }
-            self.setupSuggestions(returnSuggestions)
+            
+            // Cap the number of returns
+            if (suggestions.count >= self.maxSuggestionCount){
+                suggestions = Array(suggestions[0..<self.maxSuggestionCount])
+            }
+            
+            self.setupSuggestions(suggestions)
         })
     }
-    
-    
-
 }
