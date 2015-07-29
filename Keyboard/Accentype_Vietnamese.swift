@@ -188,7 +188,7 @@ class Accentype_Vietnamese: KeyboardViewController, SuggestionStringUpdateDelega
             NSNotificationCenter.defaultCenter().postNotificationName(
                 notification_inputChanged,
                 object: nil,
-                userInfo: ["text" : textDocumentProxy.documentContextBeforeInput])
+                userInfo: ["text" : Utils.currentInputContext(textDocumentProxy.documentContextBeforeInput)])
         }
     }
     
