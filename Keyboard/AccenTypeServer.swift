@@ -14,7 +14,7 @@ import PriorityQueue
     Communication backend to retrieve suggestions.
 */
 @objc
-class AccenTypeServer: GCDAsyncUdpSocketDelegate {
+public class AccenTypeServer: GCDAsyncUdpSocketDelegate {
     var server: String;
     var port: CUnsignedShort;
     
@@ -30,7 +30,7 @@ class AccenTypeServer: GCDAsyncUdpSocketDelegate {
         :param: server  The server used to retrieve suggestions.
         :param: port    The port used to communicate with server.
     */
-    init (server: String, port: CUnsignedShort) {
+    public init (server: String, port: CUnsignedShort) {
         self.server = server
         self.port = port
         self.requests = [UInt16: Request]()
@@ -50,9 +50,18 @@ class AccenTypeServer: GCDAsyncUdpSocketDelegate {
         self.socket.beginReceiving(&error)
     }
     
-    convenience init() {
+    public convenience init() {
         // self.init(server: "accentype.cloudapp.net", port: 10100)
         self.init(server: "accentypeheader.cloudapp.net", port: 10100)
+    }
+    
+    /**
+        Number of outstanding requests.
+    */
+    var outstandingRequests : Int {
+        get {
+            return self.requests.count;
+        }
     }
     
     /**
@@ -92,7 +101,7 @@ class AccenTypeServer: GCDAsyncUdpSocketDelegate {
     /**
         Callback triggered by GCDAsyncUdpSocket. Guaranteed to run on GCD.
     */
-    func udpSocket(udpSocket: GCDAsyncUdpSocket!, didReceiveData data: NSData!, fromAddress: NSData!, withFilterContext: AnyObject!) {
+    public func udpSocket(udpSocket: GCDAsyncUdpSocket!, didReceiveData data: NSData!, fromAddress: NSData!, withFilterContext: AnyObject!) {
         self.clearTimedOutRequests()
       
         if (udpSocket == nil || data == nil) {
