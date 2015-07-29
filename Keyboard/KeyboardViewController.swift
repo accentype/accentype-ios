@@ -537,10 +537,16 @@ class KeyboardViewController: UIInputViewController {
 
             var documentProxy = self.textDocumentProxy as? UITextDocumentProxy
             if (documentProxy != nil) {
+                
+                var contextString = ""
+                if ((documentProxy!.hasText())){
+                    contextString = documentProxy!.documentContextBeforeInput
+                }
+                
                 NSNotificationCenter.defaultCenter().postNotificationName(
                     notification_inputChanged,
                     object: nil,
-                    userInfo: ["text" : Utils.currentInputContext(documentProxy!.documentContextBeforeInput)])
+                    userInfo: ["text" : Utils.currentInputContext(contextString)])
             }
         }
         self.setCapsIfNeeded()
@@ -566,10 +572,16 @@ class KeyboardViewController: UIInputViewController {
             
             var documentProxy = self.textDocumentProxy as? UITextDocumentProxy
             if (documentProxy != nil) {
+                
+                var contextString = ""
+                if ((documentProxy!.hasText())){
+                    contextString = documentProxy!.documentContextBeforeInput
+                }
+                
                 NSNotificationCenter.defaultCenter().postNotificationName(
                     notification_inputChanged,
                     object: nil,
-                    userInfo: ["text" : Utils.currentInputContext(documentProxy!.documentContextBeforeInput)])
+                    userInfo: ["text" : Utils.currentInputContext(contextString)])
             }
         }
         self.setCapsIfNeeded()

@@ -26,10 +26,20 @@ class Utils : NSObject {
         for delimiter in Utils.delimiterCutoffs
         {
             var lastPosition = context.rangeOfString(delimiter, options: NSStringCompareOptions.BackwardsSearch)
-            if (lastPosition != nil && lastPosition?.endIndex <= farthestIndex)
+            if (lastPosition != nil && ((lastPosition?.endIndex <= farthestIndex) || foundFarthest))
             {
-                farthestIndex = lastPosition!.endIndex
-                foundFarthest = true
+                // If we already found a position, we want the match that is the closest to the end
+                if (foundFarthest && lastPosition!.endIndex > farthestIndex)
+                {
+                    farthestIndex = lastPosition!.endIndex
+                }
+                else
+                {
+                    if (!foundFarthest) {
+                        farthestIndex = lastPosition!.endIndex
+                    }
+                    foundFarthest = true
+                }
             }
         }
         

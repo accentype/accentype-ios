@@ -34,61 +34,10 @@ class Accentype_Vietnamese: KeyboardViewController, SuggestionStringUpdateDelega
     
     override func keyPressed(key: Key) {
         if let textDocumentProxy = self.textDocumentProxy as? UITextDocumentProxy {
+            
             let keyOutput = key.outputForCase(self.shiftState.uppercase())
+            self.insertText(keyOutput)
             
-            //////////
-            println("Context before input: \(textDocumentProxy.documentContextBeforeInput)")
-            println("Context after input: \(textDocumentProxy.documentContextAfterInput)")
-            
-//            if (textDocumentProxy.documentContextBeforeInput != nil && count(textDocumentProxy.documentContextBeforeInput) > 5)
-//            {
-//                textDocumentProxy.deleteBackward()
-//                textDocumentProxy.deleteBackward()
-//                textDocumentProxy.deleteBackward()
-//                println("Context before input after delete: \(textDocumentProxy.documentContextBeforeInput)")
-//                println("Context after input after delete: \(textDocumentProxy.documentContextAfterInput)")
-//            }
-            
-            if !NSUserDefaults.standardUserDefaults().boolForKey(kCatTypeEnabled) {
-                self.insertText(keyOutput)
-                return
-            }
-            /////////
-            
-            if key.type == .Character || key.type == .SpecialCharacter {
-                let context = textDocumentProxy.documentContextBeforeInput
-                if context != nil {
-                    if count(context) < 2 {
-                        self.insertText(keyOutput)
-                        return
-                    }
-                    
-                    var index = context!.endIndex
-                    
-                    index = index.predecessor()
-                    if context[index] != " " {
-                        self.insertText(keyOutput)
-                        return
-                    }
-                    
-                    index = index.predecessor()
-                    if context[index] == " " {
-                        self.insertText(keyOutput)
-                        return
-                    }
-
-                    self.insertText(keyOutput)
-                    return
-                }
-                else {
-                    self.insertText(keyOutput)
-                    return
-                }
-            }
-            else {
-                self.insertText(keyOutput)
-                return
-            }
         }
     }
     

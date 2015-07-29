@@ -193,7 +193,7 @@ public class AccenTypeServer: GCDAsyncUdpSocketDelegate {
         init (id: UInt16, completion: (result: [[String]]) -> Void) {
             self.id = id
             self.completion = completion
-            self.expirationDate = NSDate().dateByAddingTimeInterval(5)
+            self.expirationDate = NSDate().dateByAddingTimeInterval(20)
         }
     }
     
