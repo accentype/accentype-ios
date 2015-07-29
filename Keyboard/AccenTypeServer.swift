@@ -10,8 +10,11 @@ import Foundation
 import CocoaAsyncSocket
 import PriorityQueue
 
+/**
+    Communication backend to retrieve suggestions.
+*/
 @objc
-class AccenTypeServer: GCDAsyncUdpSocketDelegate {
+public class AccenTypeServer: GCDAsyncUdpSocketDelegate {
     var server: String;
     var port: CUnsignedShort;
     
@@ -21,7 +24,13 @@ class AccenTypeServer: GCDAsyncUdpSocketDelegate {
     var socket:GCDAsyncUdpSocket!;
     var requestId: UInt16;
 
-    init (server: String, port: CUnsignedShort) {
+    /**
+        Initializes AccenTypeServer.
+    
+        :param: server  The server used to retrieve suggestions.
+        :param: port    The port used to communicate with server.
+    */
+    public init (server: String, port: CUnsignedShort) {
         self.server = server
         self.port = port
         self.requests = [UInt16: Request]()
@@ -31,6 +40,9 @@ class AccenTypeServer: GCDAsyncUdpSocketDelegate {
         setupConnection()
     }
     
+    /**
+        Setup UDP connection.
+    */
     func setupConnection() {
         var error : NSError?
         self.socket = GCDAsyncUdpSocket(delegate: self, delegateQueue: dispatch_get_main_queue())
@@ -38,12 +50,24 @@ class AccenTypeServer: GCDAsyncUdpSocketDelegate {
         self.socket.beginReceiving(&error)
     }
     
-    convenience init() {
+    public convenience init() {
         // self.init(server: "accentype.cloudapp.net", port: 10100)
         self.init(server: "accentypeheader.cloudapp.net", port: 10100)
     }
     
-    func clearTimedOut() {
+    /**
+        Number of outstanding requests.
+    */
+    var outstandingRequests : Int {
+        get {
+            return self.requests.count;
+        }
+    }
+    
+    /**
+        Clears any timed out request.
+    */
+    func clearTimedOutRequests() {
         let now = NSDate()
         
         var oldest = self.requestQueue.peek()
@@ -54,6 +78,15 @@ class AccenTypeServer: GCDAsyncUdpSocketDelegate {
         }
     }
     
+    /**
+        Convenience function to read from buffer.
+    
+        :param: data    The buffer to read from.
+        :param: target  The variable to write to.
+        :param: offset  The offset to read from. Gets updated on successful read.
+        :param: length  Number of bytes to read. Defaults to sizeof(UInt8).
+        :returns:       True if read was successful, false otherwise.
+    */
     func read(data:NSData, target:UnsafeMutablePointer<Void>, inout offset:Int, length:Int = sizeof(UInt8)) -> Bool {
         if (offset + length > data.length) {
             return false;
@@ -65,8 +98,15 @@ class AccenTypeServer: GCDAsyncUdpSocketDelegate {
         return true
     }
     
-    func udpSocket(udpSocket: GCDAsyncUdpSocket!, didReceiveData data: NSData!, fromAddress: NSData!, withFilterContext: AnyObject!) {
-        self.clearTimedOut()
+    /**
+        Callback triggered by GCDAsyncUdpSocket. Guaranteed to run on GCD.
+    */
+    public func udpSocket(udpSocket: GCDAsyncUdpSocket!, didReceiveData data: NSData!, fromAddress: NSData!, withFilterContext: AnyObject!) {
+        self.clearTimedOutRequests()
+      
+        if (udpSocket == nil || data == nil) {
+            return;
+        }
         
         var offset: Int = 0;
        
@@ -125,7 +165,7 @@ class AccenTypeServer: GCDAsyncUdpSocketDelegate {
     func getSuggestion(text: String, completion: (result: [[String]]) -> Void) {
         // make sure there is no concurrent access
         dispatch_async(dispatch_get_main_queue()) {
-            self.clearTimedOut()
+            self.clearTimedOutRequests()
             
             var localRequestId = self.requestId++
 
@@ -142,6 +182,9 @@ class AccenTypeServer: GCDAsyncUdpSocketDelegate {
         }
     }
 
+    /**
+        Internal class to track outstanding requests.
+    */
     class Request {
         var id: UInt16;
         var completion: (result: [[String]]) -> Void;
@@ -153,5 +196,65 @@ class AccenTypeServer: GCDAsyncUdpSocketDelegate {
             self.expirationDate = NSDate().dateByAddingTimeInterval(5)
         }
     }
+    
+    static func expandSuggestions(suggestions:[[String]]) -> ExpandedSequence {
+        return ExpandedSequence(suggestions)
+    }
 }
+
+struct ExpandedSequence : SequenceType {
+    typealias Generator = ExpandGenerator
+    var array:[[String]]
+    
+    init(_ array:[[String]]) {
+        self.array = array
+    }
+    
+    func generate() -> Generator {
+        return ExpandGenerator(self.array)
+    }
+}
+
+struct ExpandGenerator : GeneratorType {
+    typealias Element = String
+    
+    var array:[[String]]
+    var indices:[Int]
+    var endReached = false
+    
+    init(_ array:[[String]]) {
+        self.array = array
+        self.indices = [Int](count: array.count, repeatedValue:0)
+    }
+    
+    mutating func next() -> String? {
+        if (self.endReached) {
+            return nil
+        }
+        
+        let words = map(enumerate(self.array)) {
+            (index, element) in
+            return element[self.indices[index]]
+        }
+        
+        var result = " ".join(words)
+        
+        var index = self.indices.count - 1;
+        while (index >= 0)
+        {
+            self.indices[index]++
+            if (self.indices[index] < self.array[index].count)
+            {
+                return result
+            }
+
+            self.indices[index] = 0
+            index--
+        }
+
+        self.endReached = true
+        return result
+    }
+}
+
 
