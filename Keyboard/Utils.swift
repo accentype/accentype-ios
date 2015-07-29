@@ -21,15 +21,28 @@ class Utils : NSObject {
     static func currentInputContext(context : String) -> String
     {
         var farthestIndex = context.endIndex
+        var foundFarthest = false
+        
         for delimiter in Utils.delimiterCutoffs
         {
             var lastPosition = context.rangeOfString(delimiter, options: NSStringCompareOptions.BackwardsSearch)
-            if (lastPosition != nil && lastPosition?.endIndex < farthestIndex)
+            if (lastPosition != nil && lastPosition?.endIndex <= farthestIndex)
             {
                 farthestIndex = lastPosition!.endIndex
+                foundFarthest = true
             }
         }
         
-        return context.substringFromIndex(advance(farthestIndex, 1))
+        if (farthestIndex == context.endIndex && !foundFarthest)
+        {
+            return context.substringFromIndex(context.startIndex)
+        }
+        else if (farthestIndex == context.endIndex && foundFarthest)
+        {
+            return ""
+        }
+        else {
+            return context.substringFromIndex(advance(farthestIndex, 1))
+        }
     }
 }
