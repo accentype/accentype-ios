@@ -90,13 +90,15 @@ class Accentype_Tests: XCTestCase {
             XCTAssertEqual(server.outstandingRequests, 1)
         }
         
-        delay(8) {
+        delay(7) {
             server.getSuggestion("the") {
                 (var suggestionsPerWord) in
                 
                 XCTFail("should never return")
             }
+        }
         
+        delay (8) {
             XCTAssertEqual(server.outstandingRequests, 1)
             
             expectation.fulfill()
