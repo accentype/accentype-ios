@@ -69,6 +69,7 @@ class SuggestionView: BannerViewCollectionView {
             button.setTitle(wordsuggest, forState: UIControlState.Normal)
             button.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
             button.setTitleColor(UIColor.blackColor(), forState: UIControlState.Highlighted)
+            button.titleLabel?.font = UIFont.systemFontOfSize(18)
             button.tag = index
             button.backgroundColor = UIColor(red: CGFloat(173)/CGFloat(255), green: CGFloat(180)/CGFloat(255), blue: CGFloat(190)/CGFloat(255), alpha: 1.0)
             

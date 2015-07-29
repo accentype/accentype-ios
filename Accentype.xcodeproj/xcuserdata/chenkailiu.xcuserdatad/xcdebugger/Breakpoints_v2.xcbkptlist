@@ -26,11 +26,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Keyboard/SuggestionView.swift"
-            timestampString = "459890625.082428"
+            timestampString = "459905607.177097"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "84"
-            endingLineNumber = "84"
+            startingLineNumber = "85"
+            endingLineNumber = "85"
             landmarkName = "setupSuggestions(_:)"
             landmarkType = "5">
          </BreakpointContent>
