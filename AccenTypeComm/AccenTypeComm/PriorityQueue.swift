@@ -16,6 +16,14 @@ public class PriorityQueue<T> {
         siftUp(_heap.endIndex - 1)
     }
     
+    public func peek() -> T? {
+        if _heap.count == 0 {
+            return nil
+        }
+        
+        return _heap[0];
+    }
+    
     public func pop() -> T? {
         if _heap.count == 0 {
             return nil

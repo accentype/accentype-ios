@@ -13,17 +13,17 @@ class AccenTypeServer: GCDAsyncUdpSocketDelegate {
     var server: String;
     var port: CUnsignedShort;
     
-    var requests: [Int16: Request];
+    var requests: [UInt16: Request];
     var requestQueue: PriorityQueue<Request>;
 
     var socket:GCDAsyncUdpSocket!;
-    var requestId: Int16;
+    var requestId: UInt16;
 
     init (server: String, port: CUnsignedShort) {
         self.server = server
         self.port = port
-        self.requests = [Int16: Request]()
-        self.requestQueue = PriorityQueue<Request>({ $0.creationDate.compare($1.creationDate) == NSComparisonResult.OrderedAscending })
+        self.requests = [UInt16: Request]()
+        self.requestQueue = PriorityQueue<Request>({ $0.expirationDate.compare($1.expirationDate) == NSComparisonResult.OrderedAscending })
         self.requestId = 0;
         
         setupConnection()
@@ -41,37 +41,66 @@ class AccenTypeServer: GCDAsyncUdpSocketDelegate {
         self.init(server: "accentypeheader.cloudapp.net", port: 10100)
     }
     
+    func clearTimedOut() {
+        let now = NSDate()
+        
+        var oldest = self.requestQueue.peek()
+        while (oldest != nil && now.compare(oldest!.expirationDate) == NSComparisonResult.OrderedDescending) {
+            self.requestQueue.pop()
+            self.requests.removeValueForKey(oldest!.id)
+            oldest = self.requestQueue.peek()
+        }
+    }
+    
+    func read(data:NSData, target:UnsafeMutablePointer<Void>, inout offset:Int, length:Int = sizeof(UInt8)) -> Bool {
+        if (offset + length > data.length) {
+            return false;
+        }
+        
+        data.getBytes(target, range: NSRange(location: offset, length: length))
+        offset += length
+        
+        return true
+    }
+    
     func udpSocket(udpSocket: GCDAsyncUdpSocket!, didReceiveData data: NSData!, fromAddress: NSData!, withFilterContext: AnyObject!) {
-
+        self.clearTimedOut()
+        
         var offset: Int = 0;
        
-        var requestId: Int16 = 0;
-        data.getBytes(&requestId, range: NSRange(location: offset, length: sizeof(Int16)))
-        offset += sizeof(Int16)
+        var requestId: UInt16 = 0;
+        if (!self.read(data, target: &requestId, offset: &offset, length: sizeof(UInt16))) {
+            return;
+        }
         
-        var wordCount: Int8 = 0;
-            
-        data.getBytes(&wordCount, range: NSRange(location: offset,length: sizeof(Int8)))
-        offset += sizeof(Int8)
+        var wordCount: UInt8 = 0;
+        if (!self.read(data, target: &wordCount, offset: &offset)) {
+            return;
+        }
         
         var suggestionsPerWord = [[String]]();
         suggestionsPerWord.reserveCapacity(Int(wordCount))
         
         for var i = 0; i < Int(wordCount); i++ {
             
-            var suggestionCount: Int8 = 0;
-            
-            data.getBytes(&suggestionCount, range: NSRange(location: offset,length: sizeof(Int8)))
-            offset += sizeof(Int8)
+            var suggestionCount: UInt8 = 0;
+            if (!self.read(data, target: &suggestionCount, offset: &offset)) {
+                return;
+            }
             
             var suggestions = [String]()
             suggestions.reserveCapacity(Int(suggestionCount))
             
             for var j = 0; j < Int(suggestionCount); j++ {
-                var strlen: Int8 = 0;
-                data.getBytes(&strlen, range: NSRange(location: offset, length: sizeof(Int8)))
-                offset += sizeof(Int8)
+                var strlen: UInt8 = 0;
+                if (!self.read(data, target: &strlen, offset: &offset)) {
+                    return;
+                }
             
+                if (offset + Int(strlen) > data.length) {
+                    return;
+                }
+                
                 var suggestion = data.subdataWithRange(NSRange(location: offset, length: Int(strlen)))
                 offset += Int(strlen)
             
@@ -86,7 +115,10 @@ class AccenTypeServer: GCDAsyncUdpSocketDelegate {
     }
     
     func getSuggestion(word: String, completion: (result: [[String]]) -> Void) {
+        // make sure there is no concurrent access
         dispatch_async(dispatch_get_main_queue()) {
+            self.clearTimedOut()
+            
             var localRequestId = self.requestId++
 
             let data = NSMutableData()
@@ -98,21 +130,19 @@ class AccenTypeServer: GCDAsyncUdpSocketDelegate {
             var request = Request(id: localRequestId, completion: completion)
         
             self.requests.updateValue(request, forKey: localRequestId)
-            // TODO: manage for time out
-            // self.requestQueue.push(request)
+            self.requestQueue.push(request)
         }
     }
 
     class Request {
-        var id: Int16;
+        var id: UInt16;
         var completion: (result: [[String]]) -> Void;
+        var expirationDate: NSDate;
         
-        // http://www.globalnerdy.com/2015/01/26/how-to-work-with-dates-and-times-in-swift-part-one/
-        var creationDate = NSDate();
-        
-        init (id: Int16, completion: (result: [[String]]) -> Void) {
+        init (id: UInt16, completion: (result: [[String]]) -> Void) {
             self.id = id
             self.completion = completion
+            self.expirationDate = NSDate().dateByAddingTimeInterval(5)
         }
     }
 }
