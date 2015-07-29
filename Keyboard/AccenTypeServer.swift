@@ -196,5 +196,65 @@ public class AccenTypeServer: GCDAsyncUdpSocketDelegate {
             self.expirationDate = NSDate().dateByAddingTimeInterval(5)
         }
     }
+    
+    static func expandSuggestions(suggestions:[[String]]) -> ExpandedSequence {
+        return ExpandedSequence(suggestions)
+    }
 }
+
+struct ExpandedSequence : SequenceType {
+    typealias Generator = ExpandGenerator
+    var array:[[String]]
+    
+    init(_ array:[[String]]) {
+        self.array = array
+    }
+    
+    func generate() -> Generator {
+        return ExpandGenerator(self.array)
+    }
+}
+
+struct ExpandGenerator : GeneratorType {
+    typealias Element = String
+    
+    var array:[[String]]
+    var indices:[Int]
+    var endReached = false
+    
+    init(_ array:[[String]]) {
+        self.array = array
+        self.indices = [Int](count: array.count, repeatedValue:0)
+    }
+    
+    mutating func next() -> String? {
+        if (self.endReached) {
+            return nil
+        }
+        
+        let words = map(enumerate(self.array)) {
+            (index, element) in
+            return element[self.indices[index]]
+        }
+        
+        var result = " ".join(words)
+        
+        var index = self.indices.count - 1;
+        while (index >= 0)
+        {
+            self.indices[index]++
+            if (self.indices[index] < self.array[index].count)
+            {
+                return result
+            }
+
+            self.indices[index] = 0
+            index--
+        }
+
+        self.endReached = true
+        return result
+    }
+}
+
 

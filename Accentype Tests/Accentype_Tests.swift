@@ -106,4 +106,18 @@ class Accentype_Tests: XCTestCase {
         
         self.waitForExpectationsWithTimeout(15, handler: nil)
     }
+    
+    func testSuggestionExpansion() {
+        let input = [["a", "b"],["x"], ["1","2","3"]];
+        var expected = ["a x 1", "a x 2", "a x 3", "b x 1", "b x 2", "b x 3"]
+        var actual = AccenTypeServer.expandSuggestions(input)
+        
+        var count = 0
+        for w in actual {
+            XCTAssertEqual(w, expected[count])
+            count++
+        }
+
+        XCTAssertEqual(count, 6)
+    }
 }
