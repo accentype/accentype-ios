@@ -175,7 +175,7 @@ class Accentype_Vietnamese: KeyboardViewController, SuggestionStringUpdateDelega
         
         if textDocumentProxy != nil
         {
-            for _ in 0...numberOfLetters {
+            for _ in 1...numberOfLetters {
                 textDocumentProxy!.deleteBackward()
             }
         }
@@ -196,7 +196,7 @@ class Accentype_Vietnamese: KeyboardViewController, SuggestionStringUpdateDelega
     func updateString(updateString: String)
     {
         if let textDocumentProxy = self.textDocumentProxy as? UITextDocumentProxy {
-                self.deleteString(updateString, ignoreAccent: true)
+                self.deleteCharactersWithLength(count(updateString))
                 self.insertText(updateString)
         }
     }

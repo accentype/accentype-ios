@@ -42,7 +42,9 @@ class Utils : NSObject {
             return ""
         }
         else {
-            return context.substringFromIndex(advance(farthestIndex, 1))
+//            return context.substringFromIndex(advance(farthestIndex, 1))
+            return context.substringFromIndex(farthestIndex)
+            
         }
     }
 }
