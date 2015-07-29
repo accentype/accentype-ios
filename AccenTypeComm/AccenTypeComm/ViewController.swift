@@ -22,11 +22,18 @@ class ViewController: UIViewController {
         
         // thế là sao
         // xin chao
+        self.server.getSuggestion("xin chao") {
+            (var suggestionsPerWord) in
+            
+            for suggestions in suggestionsPerWord {
+                println("answer (xin): " + (",".join(suggestions)))
+            }
+        }
         self.server.getSuggestion("the la sao") {
             (var suggestionsPerWord) in
             
             for suggestions in suggestionsPerWord {
-                println("answer: " + (",".join(suggestions)))
+                println("answer (the): " + (",".join(suggestions)))
             }
         }
         
