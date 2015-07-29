@@ -114,7 +114,13 @@ class AccenTypeServer: GCDAsyncUdpSocketDelegate {
         request?.completion(result: suggestionsPerWord)
     }
     
-    func getSuggestion(word: String, completion: (result: [[String]]) -> Void) {
+    /**
+        Retrieves suggestions for each word in `text`. Words are splitted by space.
+
+        :param: text        The text to get suggestions for.
+        :param: completion  Callback triggered when server returns result (potentially never called)
+    */
+    func getSuggestion(text: String, completion: (result: [[String]]) -> Void) {
         // make sure there is no concurrent access
         dispatch_async(dispatch_get_main_queue()) {
             self.clearTimedOut()
@@ -123,7 +129,7 @@ class AccenTypeServer: GCDAsyncUdpSocketDelegate {
 
             let data = NSMutableData()
             data.appendBytes(&localRequestId, length: sizeof(Int16))
-            data.appendData(word.dataUsingEncoding(NSASCIIStringEncoding)!)
+            data.appendData(text.dataUsingEncoding(NSASCIIStringEncoding)!)
         
             self.socket.sendData(data, withTimeout: 1, tag: 0)
         
@@ -131,6 +137,8 @@ class AccenTypeServer: GCDAsyncUdpSocketDelegate {
         
             self.requests.updateValue(request, forKey: localRequestId)
             self.requestQueue.push(request)
+            
+            self.get
         }
     }
 

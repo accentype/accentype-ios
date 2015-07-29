@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1E4D460BEC4EC1C2502EA1EE /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CA0A74168CA0B538CA9123D0 /* Pods.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		AFA1F2551B67CF3500607937 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFA1F2541B67CF3500607937 /* AppDelegate.swift */; };
 		AFA1F2571B67CF3500607937 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFA1F2561B67CF3500607937 /* ViewController.swift */; };
 		AFA1F25A1B67CF3500607937 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AFA1F2581B67CF3500607937 /* Main.storyboard */; };
@@ -14,8 +15,6 @@
 		AFA1F25F1B67CF3500607937 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = AFA1F25D1B67CF3500607937 /* LaunchScreen.xib */; };
 		AFA1F26B1B67CF3500607937 /* AccenTypeCommTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFA1F26A1B67CF3500607937 /* AccenTypeCommTests.swift */; };
 		AFA1F2751B67D09700607937 /* AccenTypeServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFA1F2741B67D09700607937 /* AccenTypeServer.swift */; };
-		AFA1F2771B67D71600607937 /* PriorityQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFA1F2761B67D71600607937 /* PriorityQueue.swift */; };
-		FEC5474F642DB5A0E25F5B32 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C5CB90CC589195367EA170E7 /* libPods.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -42,9 +41,8 @@
 		AFA1F2691B67CF3500607937 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		AFA1F26A1B67CF3500607937 /* AccenTypeCommTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccenTypeCommTests.swift; sourceTree = "<group>"; };
 		AFA1F2741B67D09700607937 /* AccenTypeServer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccenTypeServer.swift; sourceTree = "<group>"; };
-		AFA1F2761B67D71600607937 /* PriorityQueue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PriorityQueue.swift; sourceTree = "<group>"; };
 		AFF194A41B67E4A600583D2C /* Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Bridging-Header.h"; sourceTree = "<group>"; };
-		C5CB90CC589195367EA170E7 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		CA0A74168CA0B538CA9123D0 /* Pods.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -52,7 +50,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FEC5474F642DB5A0E25F5B32 /* libPods.a in Frameworks */,
+				1E4D460BEC4EC1C2502EA1EE /* Pods.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -96,7 +94,6 @@
 				AFA1F25D1B67CF3500607937 /* LaunchScreen.xib */,
 				AFA1F2521B67CF3500607937 /* Supporting Files */,
 				AFA1F2741B67D09700607937 /* AccenTypeServer.swift */,
-				AFA1F2761B67D71600607937 /* PriorityQueue.swift */,
 				AFF194A41B67E4A600583D2C /* Bridging-Header.h */,
 			);
 			path = AccenTypeComm;
@@ -130,7 +127,7 @@
 		B1C8E4BAF519513D896ED399 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				C5CB90CC589195367EA170E7 /* libPods.a */,
+				CA0A74168CA0B538CA9123D0 /* Pods.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -156,6 +153,7 @@
 				AFA1F24C1B67CF3500607937 /* Frameworks */,
 				AFA1F24D1B67CF3500607937 /* Resources */,
 				E41FDEDDB91630AE2E2B7B46 /* Copy Pods Resources */,
+				14C4A9A626476B813A0E82E2 /* Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -242,6 +240,21 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		14C4A9A626476B813A0E82E2 /* Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		3D1AADE63CFA9DF4E9359ED2 /* Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -280,7 +293,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				AFA1F2751B67D09700607937 /* AccenTypeServer.swift in Sources */,
-				AFA1F2771B67D71600607937 /* PriorityQueue.swift in Sources */,
 				AFA1F2571B67CF3500607937 /* ViewController.swift in Sources */,
 				AFA1F2551B67CF3500607937 /* AppDelegate.swift in Sources */,
 			);
