@@ -1,10 +1,13 @@
 PODS:
   - CocoaAsyncSocket (7.4.1)
+  - PriorityQueue (0.3)
 
 DEPENDENCIES:
   - CocoaAsyncSocket (~> 7.4.1)
+  - PriorityQueue (~> 0.3)
 
 SPEC CHECKSUMS:
   CocoaAsyncSocket: 7cbf214b27f8e7f7574db6a3fd96352ffaed433d
+  PriorityQueue: 33c590df685459b849f72a6b5c62baf3348049a4
 
 COCOAPODS: 0.38.2
