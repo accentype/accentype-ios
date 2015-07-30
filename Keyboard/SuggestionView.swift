@@ -27,6 +27,7 @@ class SuggestionView: BannerViewCollectionView {
     required init(globalColors: GlobalColors.Type?, darkMode: Bool, solidColorMode: Bool) {
         super.init(globalColors: globalColors, darkMode: darkMode, solidColorMode: solidColorMode)
         self.setObserversForNotifications()
+        self.registerForDoubleTapEvent()
     }
     
     required init(coder aDecoder: NSCoder) {
@@ -50,6 +51,19 @@ class SuggestionView: BannerViewCollectionView {
             object: nil)
         
         
+    }
+    
+    func registerForDoubleTapEvent()
+    {
+        let doubleTapRecognizer = UITapGestureRecognizer(target: self, action: "onSuggestionViewDoubleTapped:");
+        doubleTapRecognizer.numberOfTapsRequired = 2;
+        doubleTapRecognizer.numberOfTouchesRequired = 1;
+        self.addGestureRecognizer(doubleTapRecognizer);
+    }
+    
+    func onSuggestionViewDoubleTapped(recognizer:UITapGestureRecognizer)
+    {
+        var touchPoint = recognizer.locationInView(self)
     }
     
     func setupSuggestions(suggestions : [String])
@@ -170,4 +184,5 @@ class SuggestionView: BannerViewCollectionView {
             }
         })
     }
+    
 }
