@@ -141,12 +141,13 @@ class SuggestionView: BannerViewCollectionView {
         let userInfo : Dictionary<String, AnyObject> = notification.userInfo as! Dictionary<String, AnyObject>
         
         // don't suggest if last character is white space
-        let userText = String(userInfo["text"]! as! NSString).utf16
-        if (NSCharacterSet.whitespaceCharacterSet().characterIsMember(userText[userText.endIndex - 1])) {
+        let userString = userInfo["text"] as! String
+        let userText = userString.utf16
+        if (count(userText) > 0 && NSCharacterSet.whitespaceCharacterSet().characterIsMember(userText[userText.endIndex - 1])) {
             return
         }
         
-        let sourceString = userInfo["text"]!.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
+        let sourceString = userString.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
         
         var shouldAutoReplace : Bool? = userInfo["shouldAutoReplace"] as? Bool
         let string =  Utils.unaccentString(sourceString)
@@ -172,6 +173,9 @@ class SuggestionView: BannerViewCollectionView {
                     break
                 }
             }
+            
+            println("Original: \(sourceString)")
+            println("Suggestions: \(suggestions) ")
             
             self.setupSuggestions(suggestions)
 
