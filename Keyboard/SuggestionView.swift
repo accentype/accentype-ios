@@ -125,7 +125,15 @@ class SuggestionView: BannerViewCollectionView {
     func inputUpdated(notification : NSNotification)
     {
         let userInfo : Dictionary<String, AnyObject> = notification.userInfo as! Dictionary<String, AnyObject>
+        
+        // don't suggest if last character is white space
+        let userText = String(userInfo["text"]! as! NSString).utf16
+        if (NSCharacterSet.whitespaceCharacterSet().characterIsMember(userText[userText.endIndex - 1])) {
+            return
+        }
+        
         let sourceString = userInfo["text"]!.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
+        
         var shouldAutoReplace : Bool? = userInfo["shouldAutoReplace"] as? Bool
         let string =  Utils.unaccentString(sourceString)
         
