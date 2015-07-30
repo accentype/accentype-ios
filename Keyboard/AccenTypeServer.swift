@@ -204,58 +204,45 @@ public class AccenTypeServer: GCDAsyncUdpSocketDelegate {
 }
 
 struct ExpandedSequence : SequenceType {
-    typealias Generator = ExpandGenerator
+    typealias Generator = GeneratorOf<String>
     var array:[[String]]
     
     init(_ array:[[String]]) {
         self.array = array
     }
     
-    func generate() -> Generator {
-        return ExpandGenerator(self.array)
-    }
-}
-
-struct ExpandGenerator : GeneratorType {
-    typealias Element = String
-    
-    var array:[[String]]
-    var indices:[Int]
-    var endReached = false
-    
-    init(_ array:[[String]]) {
-        self.array = array
-        self.indices = [Int](count: array.count, repeatedValue:0)
-    }
-    
-    mutating func next() -> String? {
-        if (self.endReached) {
-            return nil
-        }
+    func generate() -> GeneratorOf<String> {
+        var indices = [Int](count: self.array.count, repeatedValue:0)
+        var endReached = false
         
-        let words = map(enumerate(self.array)) {
-            (index, element) in
-            return element[self.indices[index]]
-        }
-        
-        var result = " ".join(words)
-        
-        var index = self.indices.count - 1;
-        while (index >= 0)
-        {
-            self.indices[index]++
-            if (self.indices[index] < self.array[index].count)
-            {
-                return result
+        return GeneratorOf<String> {
+            if (endReached) {
+                return nil
             }
-
-            self.indices[index] = 0
-            index--
+            
+            let words = map(enumerate(self.array)) {
+                (index, element) in
+                return element[indices[index]]
+            }
+            
+            var result = " ".join(words)
+            
+            var index = indices.count - 1;
+            while (index >= 0)
+            {
+                indices[index]++
+                if (indices[index] < self.array[index].count)
+                {
+                    return result
+                }
+                
+                indices[index] = 0
+                index--
+            }
+            
+            endReached = true
+            return result
         }
 
-        self.endReached = true
-        return result
     }
 }
-
-

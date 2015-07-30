@@ -116,7 +116,8 @@ class SuggestionView: BannerViewCollectionView {
     func inputUpdated(notification : NSNotification)
     {
         let userInfo : Dictionary<String, String!> = notification.userInfo as! Dictionary<String, String!>
-        let string =  Utils.unaccentString(userInfo["text"]!)
+        let sourceString = userInfo["text"]!.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
+        let string =  Utils.unaccentString(sourceString)
         
         // If we have empty or whitespace strings, then don't bother sending to the server
         if string!.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet()) == "" {
@@ -129,17 +130,23 @@ class SuggestionView: BannerViewCollectionView {
             // Get flatten suggestions
             var flattenSuggestions : ExpandedSequence = AccenTypeServer.expandSuggestions(result)
             var suggestions = [String]()
+            var count = 0
+            
             for w in flattenSuggestions
             {
                 suggestions.append(w)
-            }
-            
-            // Cap the number of returns
-            if (suggestions.count >= self.maxSuggestionCount){
-                suggestions = Array(suggestions[0..<self.maxSuggestionCount])
+                // Cap the number of returns
+                if (count++ >= self.maxSuggestionCount) {
+                    break
+                }
             }
             
             self.setupSuggestions(suggestions)
+
+            let currentString = userInfo["text"]!.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
+            if (currentString == sourceString && currentString != suggestions[0]) {
+                self.keyboardDelegate?.updateString(suggestions[0])
+            }
         })
     }
 }
