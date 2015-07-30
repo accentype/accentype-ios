@@ -16,7 +16,7 @@ class Accentype_Tests: XCTestCase {
             var expectation = self.expectationWithDescription("Suggestion response")
             
             // This is an example of a functional test case.
-            var server = AccenTypeServer()
+            var server = AccenTypeServer(enableCache: false)
             
             server.getSuggestion("xin chao") {
                 (var suggestionsPerWord) in
@@ -32,7 +32,7 @@ class Accentype_Tests: XCTestCase {
     }
     
     func testSuggestionMultiple() {
-        var server = AccenTypeServer()
+        var server = AccenTypeServer(enableCache: false)
         
         for i in 1...10 {
             var expectationXin = self.expectationWithDescription("Suggestion response: xin")
@@ -74,7 +74,7 @@ class Accentype_Tests: XCTestCase {
     }
     
     func testSuggestionTimeout() {
-        var server = AccenTypeServer(server: "nonexisting.com", port: 123);
+        var server = AccenTypeServer(server: "nonexisting.com", port: 123, enableCache: false, requestTimeout: 5)
         
         var expectation = self.expectationWithDescription("Suggestion response")
         
@@ -104,7 +104,7 @@ class Accentype_Tests: XCTestCase {
             expectation.fulfill()
         }
         
-        self.waitForExpectationsWithTimeout(15, handler: nil)
+        self.waitForExpectationsWithTimeout(10, handler: nil)
     }
     
     func testSuggestionExpansion() {
@@ -119,5 +119,37 @@ class Accentype_Tests: XCTestCase {
         }
 
         XCTAssertEqual(count, 6)
+    }
+    
+    func testCaching() {
+        var expectation1 = self.expectationWithDescription("Suggestion response")
+        var expectation2 = self.expectationWithDescription("Suggestion response")
+        
+        // This is an example of a functional test case.
+        var server1 = AccenTypeServer()
+        
+        server1.getSuggestion("xin chao") {
+            (var suggestionsPerWord) in
+            
+            XCTAssertGreaterThan(suggestionsPerWord.count, 0);
+            XCTAssertGreaterThan(suggestionsPerWord[0].count, 0);
+            
+            expectation1.fulfill()
+        }
+        
+        var server2 = AccenTypeServer(server: "nonexisting.com", port: 123, enableCache: true)
+        delay(1) {
+            server1.getSuggestion("xin chao") {
+                (var suggestionsPerWord) in
+                
+                XCTAssertGreaterThan(suggestionsPerWord.count, 0);
+                XCTAssertGreaterThan(suggestionsPerWord[0].count, 0);
+                
+                expectation2.fulfill()
+            }
+        }
+        
+        self.waitForExpectationsWithTimeout(5, handler: nil)
+        
     }
 }
