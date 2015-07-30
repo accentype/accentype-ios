@@ -43,6 +43,9 @@
 		50251B89B2298F801E6D4108 /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7F6F3962DB3F17D8015854E2 /* Pods.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		AFC92B5F1B69320700BA50FF /* Accentype_Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFC92B5E1B69320700BA50FF /* Accentype_Tests.swift */; };
 		AFC92B671B69374800BA50FF /* AccenTypeServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047FBEBA1B691FF8009240C1 /* AccenTypeServer.swift */; };
+		AFC92B6A1B69B6C800BA50FF /* AccenType.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = AFC92B681B69B6C800BA50FF /* AccenType.xcdatamodeld */; };
+		AFC92B6B1B69EBB100BA50FF /* AccenType.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = AFC92B681B69B6C800BA50FF /* AccenType.xcdatamodeld */; };
+		AFC92B6C1B69EBBE00BA50FF /* AccenType.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = AFC92B681B69B6C800BA50FF /* AccenType.xcdatamodeld */; };
 		BC8A0D5C8032C9DC3CBBBFDC /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7F6F3962DB3F17D8015854E2 /* Pods.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		DE6AB15F5F6C4B8B1FE4E238 /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7F6F3962DB3F17D8015854E2 /* Pods.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		E25C6FC737BD1E911A371069 /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7F6F3962DB3F17D8015854E2 /* Pods.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
@@ -161,6 +164,8 @@
 		AFC92B5A1B69320700BA50FF /* Accentype Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Accentype Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		AFC92B5D1B69320700BA50FF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		AFC92B5E1B69320700BA50FF /* Accentype_Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Accentype_Tests.swift; sourceTree = "<group>"; };
+		AFC92B691B69B6C800BA50FF /* AccenType.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = AccenType.xcdatamodel; sourceTree = "<group>"; };
+		AFC92B6D1B69EE0200BA50FF /* AccenType v1.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "AccenType v1.xcdatamodel"; sourceTree = "<group>"; };
 		B8BF2BCC180B690CE2CABD84 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		D1AAE7B7E0D319EB4073B0FC /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -208,6 +213,7 @@
 			children = (
 				047FBEBB1B691FF8009240C1 /* Bridging-Header.h */,
 				047FBEBA1B691FF8009240C1 /* AccenTypeServer.swift */,
+				AFC92B681B69B6C800BA50FF /* AccenType.xcdatamodeld */,
 			);
 			name = Server;
 			sourceTree = "<group>";
@@ -755,6 +761,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4EF16F9B19D2550D0076AFCB /* AppDelegate.swift in Sources */,
+				AFC92B6B1B69EBB100BA50FF /* AccenType.xcdatamodeld in Sources */,
 				4EF16F9819D255030076AFCB /* ViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -781,6 +788,7 @@
 				4E52A6D81A06C16C006A08CE /* DefaultSettings.swift in Sources */,
 				048B890D1B67E8D0002C9A14 /* BannerViewCollectionView.swift in Sources */,
 				4E72C96819E04A7A00DFDDB0 /* Accentype_Vietnamese.swift in Sources */,
+				AFC92B6A1B69B6C800BA50FF /* AccenType.xcdatamodeld in Sources */,
 				4E60A13E1979FB2E00854CC8 /* DirectionEnum.swift in Sources */,
 				4EC2A46D19DF811E00F789E1 /* KeyboardViewController.swift in Sources */,
 				047FBEBD1B691FF8009240C1 /* AccenTypeServer.swift in Sources */,
@@ -799,6 +807,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				AFC92B5F1B69320700BA50FF /* Accentype_Tests.swift in Sources */,
+				AFC92B6C1B69EBBE00BA50FF /* AccenType.xcdatamodeld in Sources */,
 				AFC92B671B69374800BA50FF /* AccenTypeServer.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1136,6 +1145,20 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		AFC92B681B69B6C800BA50FF /* AccenType.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				AFC92B6D1B69EE0200BA50FF /* AccenType v1.xcdatamodel */,
+				AFC92B691B69B6C800BA50FF /* AccenType.xcdatamodel */,
+			);
+			currentVersion = AFC92B691B69B6C800BA50FF /* AccenType.xcdatamodel */;
+			path = AccenType.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 4E807D8B19461D9000D875D1 /* Project object */;
 }
