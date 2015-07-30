@@ -36,7 +36,7 @@ class Accentype_Vietnamese: KeyboardViewController, SuggestionStringUpdateDelega
         if let textDocumentProxy = self.textDocumentProxy as? UITextDocumentProxy {
             
             let keyOutput = key.outputForCase(self.shiftState.uppercase())
-            self.insertText(keyOutput)
+            self.insertText(keyOutput, shouldAutoReplace: true)
             
         }
     }
@@ -130,14 +130,15 @@ class Accentype_Vietnamese: KeyboardViewController, SuggestionStringUpdateDelega
         }
     }
     
-    func insertText(newText : String) -> Void
+    func insertText(newText : String, shouldAutoReplace : Bool) -> Void
     {
         if let textDocumentProxy = self.textDocumentProxy as? UITextDocumentProxy {
             textDocumentProxy.insertText(newText)
             NSNotificationCenter.defaultCenter().postNotificationName(
                 notification_inputChanged,
                 object: nil,
-                userInfo: ["text" : Utils.currentInputContext(textDocumentProxy.documentContextBeforeInput)])
+                userInfo: ["text" : Utils.currentInputContext(textDocumentProxy.documentContextBeforeInput),
+                           "shouldAutoReplace" : shouldAutoReplace])
         }
     }
     
@@ -146,7 +147,7 @@ class Accentype_Vietnamese: KeyboardViewController, SuggestionStringUpdateDelega
     {
         if let textDocumentProxy = self.textDocumentProxy as? UITextDocumentProxy {
                 self.deleteCharactersWithLength(count(updateString))
-                self.insertText(updateString)
+                self.insertText(updateString, shouldAutoReplace: false)
         }
     }
 }

@@ -124,8 +124,9 @@ class SuggestionView: BannerViewCollectionView {
     // Called when the input is updatd, need to fetch new suggestions
     func inputUpdated(notification : NSNotification)
     {
-        let userInfo : Dictionary<String, String!> = notification.userInfo as! Dictionary<String, String!>
+        let userInfo : Dictionary<String, AnyObject> = notification.userInfo as! Dictionary<String, AnyObject>
         let sourceString = userInfo["text"]!.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
+        var shouldAutoReplace : Bool? = userInfo["shouldAutoReplace"] as? Bool
         let string =  Utils.unaccentString(sourceString)
         
         // If we have empty or whitespace strings, then don't bother sending to the server
@@ -152,9 +153,12 @@ class SuggestionView: BannerViewCollectionView {
             
             self.setupSuggestions(suggestions)
 
-            let currentString = userInfo["text"]!.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
-            if (currentString == sourceString && currentString != suggestions[0]) {
-                self.keyboardDelegate?.updateString(suggestions[0])
+            if ((shouldAutoReplace) != nil && shouldAutoReplace!)
+            {
+                let currentString = userInfo["text"]!.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
+                if (currentString == sourceString && currentString != suggestions[0]) {
+                    self.keyboardDelegate?.updateString(suggestions[0])
+                }
             }
         })
     }
