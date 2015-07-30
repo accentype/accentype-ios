@@ -87,6 +87,10 @@ class SuggestionView: BannerViewCollectionView {
             
             button.addTarget(self, action: "suggestionPressed:", forControlEvents: UIControlEvents.TouchUpInside)
             button.addTarget(self, action: "suggestionTouchDown:", forControlEvents: UIControlEvents.TouchDown)
+            button.addTarget(self, action: "resetSuggestionViewColor:", forControlEvents: UIControlEvents.TouchUpOutside)
+            button.addTarget(self, action: "resetSuggestionViewColor:", forControlEvents: UIControlEvents.TouchDragExit)
+            button.addTarget(self, action: "resetSuggestionViewColor:", forControlEvents: UIControlEvents.TouchCancel)
+            
             self.addSubview(button)
         }
         
@@ -105,6 +109,11 @@ class SuggestionView: BannerViewCollectionView {
         {
             self.keyboardDelegate?.updateString(suggestions[sender.tag])
         }
+    }
+    
+    func resetSuggestionViewColor(sender: UIButton!)
+    {
+        sender.backgroundColor = UIColor(red: CGFloat(173)/CGFloat(255), green: CGFloat(180)/CGFloat(255), blue: CGFloat(190)/CGFloat(255), alpha: 1.0)
     }
     
     func suggestionTouchDown(sender: UIButton!)
